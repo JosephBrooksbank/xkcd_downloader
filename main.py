@@ -25,10 +25,9 @@ safe_title = data['title'].replace(' ', '_').lower() + ".png"
 previous_comic = open(xkcd_dir+'/previous_comic.txt', 'r')
 previous_comic_title = previous_comic.read()
 previous_comic.close()
-print "mv " + xkcd_dir + "/" + previous_comic_title + ' ' + xkcd_dir + "/old_comics"
 if previous_comic_title != safe_title:     # downloads comic if new
 
-    if not previous_comic_title == "NULL":
+    if not previous_comic_title == "NULL":  #Checks for first-run
         os.system("mv " + xkcd_dir + "/" + previous_comic_title + ' ' + xkcd_dir + "/old_comics")
 
     os.system('wget -P ' + xkcd_dir + ' ' + data['img'])
