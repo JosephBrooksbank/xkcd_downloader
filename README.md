@@ -1,6 +1,11 @@
 # xkcd_downloader
 Simple script to download the latest xkcd 
 
+#####Dependencies: 
+`ImageMagick` 
+
+`python2.7`
+
 ###To install:
 `sudo ./install.sh`
 
