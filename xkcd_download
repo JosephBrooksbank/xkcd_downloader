@@ -34,8 +34,10 @@ if previous_comic_title != safe_title:  # downloads comic if new
     previous_comic = open(xkcd_dir + '/previous_comic.txt', 'w')
     previous_comic.write(safe_title)
     previous_comic.close()
-    
-    (os.system("convert " + current_xkcd_comic + " -background White -font Lucida-G -pointsize 10 label:'" + data["alt"]
+    safe_alt = str(data["alt"])
+    safe_alt = safe_alt.replace("'", "'\\''")
+
+    (os.system("convert " + current_xkcd_comic + " -background White -font Lucida-G -pointsize 10 label:'" + safe_alt
                + "' -gravity Center -append " + current_xkcd_comic))
 else:
     print "Already got the comic!"
