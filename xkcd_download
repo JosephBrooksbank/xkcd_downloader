@@ -9,6 +9,7 @@ import subprocess
 parser = argparse.ArgumentParser(description="download the latest xkcd")
 parser.add_argument("-v", "--verbose", action="store_true", help="Makes the output more verbose")
 parser.add_argument("-r", "--remove", action="store_true", help="Removes previous comic if specified")
+parser.add_argument("-f", "--force", action="store_true", help="Forces download of new comic.")
 args = parser.parse_args()
 xkcd_dir = "/home/" + os.environ['USER'] + "/.xkcd_download"
 if not os.path.exists(xkcd_dir):  # creates folder to store all data
@@ -34,9 +35,9 @@ previous_comic_title = previous_comic.read()
 previous_comic.close()
 
 current_xkcd_comic = xkcd_dir + "/" + safe_title
-if previous_comic_title != safe_title:  # downloads comic if new
+if (previous_comic_title != safe_title) or args.force:  # downloads comic if new
     if not previous_comic_title == "NULL":  # Checks for first-run
-        if args.r:
+        if args.remove:
             subprocess.call(['rm', xkcd_dir + '/' + previous_comic_title])
         else:
             subprocess.call(['mv', current_xkcd_comic, xkcd_dir + "/old_comics"])
