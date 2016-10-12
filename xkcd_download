@@ -3,17 +3,26 @@
 import json
 import os
 import urllib
+import argparse
+import subprocess
 
+parser = argparse.ArgumentParser(description="download the latest xkcd")
+parser.add_argument("-v", "--verbose", action="store_true", help="Makes the output more verbose")
+parser.add_argument("-r", "--remove", action="store_true", help="Removes previous comic if specified")
+args = parser.parse_args()
 xkcd_dir = "/home/" + os.environ['USER'] + "/.xkcd_download"
 if not os.path.exists(xkcd_dir):  # creates folder to store all data
     os.mkdir(xkcd_dir)
-    print "creating directory " + xkcd_dir
+    if args.verbose:
+        print "creating directory " + xkcd_dir
     os.mkdir(xkcd_dir + "/old_comics")
-    print "creating directory " + xkcd_dir + "/old_comics"
+    if args.verbose:
+        print "creating directory " + xkcd_dir + "/old_comics"
 if not os.path.exists(xkcd_dir + "/previous_comic.txt"):
     previous_comic = open(xkcd_dir + '/previous_comic.txt', 'w+')
     previous_comic.write('NULL')
-    print "no previous comic detected, creating file..."
+    if args.verbose:
+        print "no previous comic detected, creating file..."
     previous_comic.close()
 
 url = "http://xkcd.com/info.0.json"  # URL for xkcd json file
@@ -26,18 +35,23 @@ previous_comic.close()
 
 current_xkcd_comic = xkcd_dir + "/" + safe_title
 if previous_comic_title != safe_title:  # downloads comic if new
-
     if not previous_comic_title == "NULL":  # Checks for first-run
-        os.system("mv " + current_xkcd_comic + ' ' + xkcd_dir + "/old_comics")
+        if args.r:
+            subprocess.call(['rm', xkcd_dir + '/' + previous_comic_title])
+        else:
+            subprocess.call(['mv', current_xkcd_comic, xkcd_dir + "/old_comics"])
+    if args.verbose:
+        subprocess.call(['wget', '-P', xkcd_dir, data['img']], )
+    else:
+        with open('/dev/null', 'w') as devnull:
+            subprocess.call(['wget', '-P', xkcd_dir, data['img']], stdout=devnull, stderr=devnull)
 
-    os.system('wget -P ' + xkcd_dir + ' ' + data['img'])
+    safe_alt = str(data["alt"])
+    safe_alt = safe_alt.replace("'", "'\\''")
+    (subprocess.call('convert ' + current_xkcd_comic + ' -background White -font Lucida-G -pointsize 10 label:\'' +
+                     safe_alt + '\' -gravity Center -append ' + current_xkcd_comic, shell=True))
     previous_comic = open(xkcd_dir + '/previous_comic.txt', 'w')
     previous_comic.write(safe_title)
     previous_comic.close()
-    safe_alt = str(data["alt"])
-    safe_alt = safe_alt.replace("'", "'\\''")
-
-    (os.system("convert " + current_xkcd_comic + " -background White -font Lucida-G -pointsize 10 label:'" + safe_alt
-               + "' -gravity Center -append " + current_xkcd_comic))
 else:
     print "Already got the comic!"
