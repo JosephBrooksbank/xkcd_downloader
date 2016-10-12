@@ -11,7 +11,7 @@ parser.add_argument("-v", "--verbose", action="store_true", help="Makes the outp
 parser.add_argument("-r", "--remove", action="store_true", help="Removes previous comic if specified")
 parser.add_argument("-f", "--force", action="store_true", help="Forces download of new comic.")
 args = parser.parse_args()
-xkcd_dir = "/home/" + os.environ['USER'] + "/.xkcd_download"  # setting directory to store images
+xkcd_dir = "/Users/" + os.environ['USER'] + "/.xkcd_download"  # setting directory to store images
 # TODO ask user for location on install
 if not os.path.exists(xkcd_dir):  # creates folder to store all data
     os.mkdir(xkcd_dir)
