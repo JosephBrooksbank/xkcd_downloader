@@ -2,7 +2,7 @@
 
 import json
 import os
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import argparse
 import subprocess
 
@@ -16,20 +16,20 @@ xkcd_dir = "/home/" + os.environ['USER'] + "/.xkcd_download"  # setting director
 if not os.path.exists(xkcd_dir):  # creates folder to store all data
     os.mkdir(xkcd_dir)
     if args.verbose:
-        print "creating directory " + xkcd_dir
+        print("creating directory " + xkcd_dir)
     os.mkdir(xkcd_dir + "/old_comics")  # creates location to store all old comics
     if args.verbose:
-        print "creating directory " + xkcd_dir + "/old_comics"
+        print("creating directory " + xkcd_dir + "/old_comics")
 if not os.path.exists(xkcd_dir + "/previous_comic.txt"):  # Creates text file to hold the name of the previous
     # across runs
     previous_comic = open(xkcd_dir + '/previous_comic.txt', 'w+')
     previous_comic.write('NULL')
     if args.verbose:
-        print "no previous comic detected, creating file..."
+        print("no previous comic detected, creating file...")
     previous_comic.close()
 
 url = "http://xkcd.com/info.0.json"  # URL for xkcd json file
-xkcdJsonURL = urllib.urlopen(url)  # parses json file
+xkcdJsonURL = urllib.request.urlopen(url)  # parses json file
 data = json.loads(xkcdJsonURL.read())
 safe_title = data['title'].replace(' ', '_').lower() + ".png"  # Converts the "title" data into what the image will be
 # Labeled as
@@ -58,4 +58,4 @@ if (previous_comic_title != safe_title) or args.force:  # downloads comic if new
     previous_comic.write(safe_title)  # writes alt text
     previous_comic.close()
 else:
-    print "Already got the comic!"
+    print("Already got the comic!")
