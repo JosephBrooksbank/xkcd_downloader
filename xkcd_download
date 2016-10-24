@@ -5,7 +5,6 @@ import os
 import urllib.request, urllib.parse, urllib.error
 import argparse
 import subprocess
-
 parser = argparse.ArgumentParser(description="download the latest xkcd")  # parser handles argument input
 parser.add_argument("-v", "--verbose", action="store_true", help="Makes the output more verbose")  # adding arguments
 parser.add_argument("-r", "--remove", action="store_true", help="Removes previous comic if specified")
