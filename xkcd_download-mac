@@ -1,10 +1,11 @@
 #!/usr/bin/python2.7
 
+import argparse
 import json
 import os
-import urllib
-import argparse
 import subprocess
+import sys
+import urllib
 
 parser = argparse.ArgumentParser(description="download the latest xkcd")  # parser handles argument input
 parser.add_argument("-v", "--verbose", action="store_true", help="Makes the output more verbose")  # adding arguments
@@ -29,7 +30,12 @@ if not os.path.exists(xkcd_dir + "/previous_comic.txt"):  # Creates text file to
     previous_comic.close()
 
 url = "http://xkcd.com/info.0.json"  # URL for xkcd json file
-xkcdJsonURL = urllib.urlopen(url)  # parses json file
+try:
+    xkcdJsonURL = urllib.urlopen(url)  # parses json file
+except:
+    print("sah dude you don't have internet")
+    sys.exit()
+
 data = json.loads(xkcdJsonURL.read())
 safe_title = data['title'].replace(' ', '_').lower() + ".png"  # Converts the "title" data into what the image will be
 # Labeled as
