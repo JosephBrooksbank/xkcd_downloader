@@ -21,4 +21,8 @@ simply run `xkcd_download` to save the latest comic in `~/.xkcd_download`. If yo
 
 `-r, --remove`      Removes the previous comic rather than storing it in old_comics
 
+`-f, --force`       Forces update of comic 
+
+`-c, --config`      Runs the first time config again
+
 
