@@ -98,7 +98,6 @@ def get_comic(previous_title, current_title, data):
 
         previous_comic_file = open(install_dir + "/previous_comic.txt", 'w')
         previous_comic_file.write(current_title)
-        print(current_title)
         previous_comic_file.close()
 
     elif previous_title == current_title:
