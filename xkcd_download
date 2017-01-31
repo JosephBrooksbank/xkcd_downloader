@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#! /usr/bin/env python3
 
 import argparse
 import configparser
@@ -8,7 +8,8 @@ import subprocess
 import urllib
 import urllib.request
 from sys import exit
-config_file_location = os.path.expanduser("~") + "/.config/xkcd_download/xkcd_download.conf"
+
+config_file_location = os.path.expanduser('~') + "/.config/xkcd_download/xkcd_download.conf"
 config = configparser.ConfigParser()
 config.read(config_file_location)
 
@@ -69,7 +70,7 @@ def get_data(json_url):
 
 
 def safe_name(data):
-    return data['title'].replace(' ', '_').lower() + ".png"
+    return data['safe_title'].replace(' ', '_').replace('/', '_').lower() + ".png"
 
 
 def previous_title():
@@ -97,6 +98,7 @@ def get_comic(previous_title, current_title, data):
 
         previous_comic_file = open(install_dir + "/previous_comic.txt", 'w')
         previous_comic_file.write(current_title)
+        print(current_title)
         previous_comic_file.close()
 
     elif previous_title == current_title:
