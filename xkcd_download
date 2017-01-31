@@ -20,12 +20,10 @@ flags.add_argument("-r", "--remove", action="store_true", help="Removes previous
 flags.add_argument("-f", "--force", action="store_true", help="Forces update of comic")
 args = flags.parse_args()
 
-verboseprint = print if args.verbose else lambda *a, **k: None
-
 
 def main():
     if config.get("first_run", "setup") == "True" or args.config:
-        verboseprint("Running Setup..")
+        verboseprint("Running Setup...")
         setup()
     install_dir = config.get("install_location", "location")
     previous_comic_file = open(install_dir + "/previous_comic.txt")
@@ -34,6 +32,11 @@ def main():
     current_comic_title = safe_name(get_data("http://xkcd.com/info.0.json"))
     verboseprint("Checking for new comic and downloading..")
     get_comic(previous_comic_title, current_comic_title, get_data("http://xkcd.com/info.0.json"))
+
+
+def verboseprint(string):
+    if args.verbose:
+        print(string)
 
 
 def setup():
