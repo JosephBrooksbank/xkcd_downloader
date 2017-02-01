@@ -94,6 +94,7 @@ def get_comic(previous_title, current_title, data):
                 subprocess.call(['mv', previous_comic, install_dir + "/old_comics"])
 
         urllib.request.urlretrieve(data['img'], install_dir + "/" + current_title)
+        subprocess.run(['convert ' + current_comic + r' -resize 700x700\> ' + current_comic], shell=True,)
 
         safe_alt = str(data["alt"]).replace("'", "'\\''")  # Sanitizes alt/title text
         (subprocess.run(['convert ' + current_comic + ' -background White -pointsize 12 label:\'' +
