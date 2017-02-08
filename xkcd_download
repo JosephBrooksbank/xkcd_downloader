@@ -22,6 +22,11 @@ args = flags.parse_args()
 
 
 def main():
+    """
+    The main function, downloads comic and adds title text
+    :return: None
+    """
+
     if config.get("first_run", "setup") == "True" or args.config:
         verboseprint("Running Setup...")
         setup()
@@ -29,17 +34,28 @@ def main():
     previous_comic_file = open(install_dir + "/previous_comic.txt")
     previous_comic_title = previous_comic_file.read()
     previous_comic_file.close()
-    current_comic_title = safe_name(get_data("http://xkcd.com/info.0.json"))
+    current_comic_title = safe_name(get_data("http://xkcd.com/info.0.json", ), 'safe_title')
     verboseprint("Checking for new comic and downloading..")
     get_comic(previous_comic_title, current_comic_title, get_data("http://xkcd.com/info.0.json"))
 
 
 def verboseprint(string):
+    """
+    A function to print extraneous output if the verbose flag is used, helpful for debugging
+    :param string: The string to print if verbose mode is activated
+    :return: None
+    """
+
     if args.verbose:
         print(string)
 
 
 def setup():
+    """
+    Reads config file to find location to download images to
+    :return: None
+    """
+
     config_file = open(config_file_location, 'w')
     config.set("install_location", "location", install_location())
     config.set("first_run", "setup", "False")
@@ -49,6 +65,10 @@ def setup():
 
 
 def install_location():
+    """
+    Sets up install directory
+    :return: None
+    """
     if input("default install location is ~/.xkcd_download. Change? (y/n)") == "y":
         install_dir = input("enter new location here")
         verboseprint("Install location changed to " + install_dir)
@@ -62,6 +82,12 @@ def install_location():
 
 
 def get_data(json_url):
+    """
+    Grabs the json file from the internet to use when downloading images and reading titles and text
+    :param json_url: The url of the json file to be used
+    :return: The decoded json file as a list
+    """
+
     try:
         verboseprint("attempting to get json url..")
         json_file = urllib.request.urlopen(json_url)
@@ -72,16 +98,34 @@ def get_data(json_url):
         exit()
 
 
-def safe_name(data):
-    return data['safe_title'].replace(' ', '_').replace('/', '_').lower() + ".png"
+def safe_name(data, title_name):
+    """
+    Converts the title into a file name safe string.
+    :param data: A decoded json file
+    :param title_name: The json key relevant to the title of the comic
+    :return: The title of the comic, with spaces and other directory breaking objects replaced
+    """
+    return data[title_name].replace(' ', '_').replace('/', '_').lower() + ".png"
 
 
 def previous_title():
+    """
+    Reads the title of the previously downloaded comic into a variable
+    :return: A the previous comic's title as a string
+    """
     install_dir = config.get("install_location", "location")
     return open(install_dir + "/previous_comic", 'r').read()
 
 
-def get_comic(previous_title, current_title, data):
+def get_comic(previous_title, current_title, data):  # TODO This function is a bit too large, should split it up
+    """
+    Grabs comic from url, writes title onto bottom of image, and saves the comic title in the previous comic file for
+    use next time the script is run, to make sure no duplicates are downloaded.
+    :param previous_title: The title of the previous comic, to make sure no duplicates are downloaded
+    :param current_title: The title of the current comic, for use in downloading and naming the file
+    :param data: the json file from the comic's website
+    :return: None
+    """
     install_dir = config.get("install_location", "location")
     previous_comic = install_dir + "/" + previous_title
     current_comic = install_dir + "/" + current_title
