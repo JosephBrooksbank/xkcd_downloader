@@ -100,12 +100,12 @@ def get_data(json_url):
 
 def safe_name(data, title_name):
     """
-    Converts the title into a file name safe string.
+    Converts the title into a file name, with illegal characters changed.
     :param data: A decoded json file
     :param title_name: The json key relevant to the title of the comic
     :return: The title of the comic, with spaces and other directory breaking objects replaced
     """
-    return data[title_name].replace(' ', '_').replace('/', '_').lower() + ".png"
+    return data[title_name].replace(' ', '_').replace('/', '_').lower() + ".jpg"
 
 
 def previous_title():
